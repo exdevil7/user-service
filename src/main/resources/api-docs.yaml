@@ -1,0 +1,55 @@
+openapi: 3.0.3
+info:
+  title: User Service API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local Development Server
+paths:
+  /users/:
+    get:
+      summary: Get all users
+      operationId: getUser
+      tags:
+        - users
+      parameters:
+        - name: username
+          required: false
+          in: query
+          schema:
+            type: string
+            pattern: '^\S+$'
+        - name: name
+          required: false
+          in: query
+          schema:
+            type: string
+            pattern: '^[a-zA-Z]+$'
+        - name: surname
+          required: false
+          in: query
+          schema:
+            type: string
+            pattern: '^[a-zA-Z]+$'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+components:
+  schemas:
+    UserDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string

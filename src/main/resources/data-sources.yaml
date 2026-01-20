@@ -1,0 +1,13 @@
+data-sources:
+  configs:
+    - name: database-1
+      # strategy: postgres
+      url: jdbc:postgresql://localhost:5432/db1
+      table: users
+      user: testuser
+      password: testpass
+      mapping:
+        id: user_id
+        username: login
+        name: first_name
+        surname: last_name
