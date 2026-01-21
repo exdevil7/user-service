@@ -1,13 +1,24 @@
 data-sources:
   configs:
-    - name: database-1
-      # strategy: postgres
-      url: jdbc:postgresql://localhost:5432/db1
+    - name: "${POSTGRES_DB_NAME}"
+      # strategy: default
+      url: "${POSTGRES_DB_URL}"
       table: users
-      user: testuser
-      password: testpass
+      user: "${DB_USER}"
+      password: "${DB_PASSWORD}"
       mapping:
         id: user_id
         username: login
         name: first_name
         surname: last_name
+    - name: "${MYSQL_DB_NAME}"
+      # strategy: mysql - to use a custom strategy, implement a new DatabaseStrategy
+      url: "${MYSQL_DB_URL}"
+      table: user_table
+      user: "${DB_USER}"
+      password: "${DB_PASSWORD}"
+      mapping:
+        id: ldap_login
+        username: ldap_login
+        name: name
+        surname: surname

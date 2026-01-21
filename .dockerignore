@@ -1,0 +1,29 @@
+# Build artifacts
+build/
+.gradle/
+out/
+
+# IDE settings
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker files
+Dockerfile
+.dockerignore
+
+# Local environment and logs
+*.log
+.env

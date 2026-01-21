@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import ua.comparus.userservice.config.DataSourceProperties;
 import ua.comparus.userservice.repository.datasource.strategy.DatabaseStrategy;
 
-@Component("postgres")
-public class PostgresStrategy implements DatabaseStrategy {
+@Component("default")
+public class DefaultStrategy implements DatabaseStrategy {
 
     @Override
     public HikariDataSource createDataSource(DataSourceProperties config) {
@@ -15,7 +15,7 @@ public class PostgresStrategy implements DatabaseStrategy {
         ds.setUsername(config.user());
         ds.setPassword(config.password());
         ds.setPoolName("HikariPool-" + config.name());
-        ds.setMaximumPoolSize(5); // adjust based on needs
+        ds.setMaximumPoolSize(10); // adjust based on needs
         return ds;
     }
 }

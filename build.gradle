@@ -12,11 +12,16 @@ description = 'user-service'
 
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.1'
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
@@ -24,8 +29,6 @@ dependencies {
 
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'org.postgresql:postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 }
-

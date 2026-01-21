@@ -29,29 +29,31 @@ public class SqlQueryBuilder {
     }
 
     public SqlQueryBuilder where(String field, String value) {
-        return appendCondition(field, " = ?", value);
-    }
-
-    public SqlQueryBuilder and(String field, String value) {
-        return appendCondition(field, " = ?", value);
-    }
-
-    public SqlQueryBuilder whereLike(String field, String value) {
-        return appendCondition(field, " LIKE ?", value + "%");
-    }
-
-    public SqlQueryBuilder andLike(String field, String value) {
-        return appendCondition(field, " LIKE ?", value + "%");
-    }
-
-    private SqlQueryBuilder appendCondition(String field, String operator, String value) {
         if (value == null || value.isBlank()) {
             return this;
         }
         appendWhereClause();
-        sql.append(field).append(operator);
+        sql.append(field).append(" = ?");
         params.add(value);
         return this;
+    }
+
+    public SqlQueryBuilder and(String field, String value) {
+        return where(field, value);
+    }
+
+    public SqlQueryBuilder whereLike(String field, String value) {
+        if (value == null || value.isBlank()) {
+            return this;
+        }
+        appendWhereClause();
+        sql.append("LOWER(").append(field).append(") LIKE ?");
+        params.add(value.toLowerCase() + "%");
+        return this;
+    }
+
+    public SqlQueryBuilder andLike(String field, String value) {
+        return whereLike(field, value);
     }
 
     public SqlQueryBuilder orderBy(String orderBy) {

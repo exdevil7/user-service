@@ -8,7 +8,7 @@ import java.util.Map;
 
 public record DataSourceProperties(
         @NotEmpty String name,
-        @DefaultValue("postgres") String strategy,
+        @DefaultValue("default") String strategy,
         @NotEmpty String url,
         @NotEmpty String table,
         @NotEmpty String user,
