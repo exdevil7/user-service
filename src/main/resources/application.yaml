@@ -6,6 +6,8 @@ spring:
       - optional:file:./data-sources.yaml
       - optional:classpath:data-sources.yaml
   web:
+    locale: en
+    locale-resolver: fixed
     error:
       include-message: always
 

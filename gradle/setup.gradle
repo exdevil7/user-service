@@ -4,37 +4,99 @@ java {
     }
 }
 
+
+def generatedSourcesDir = layout.buildDirectory.dir("generated")
+def basePackage = "ua.comparus.userservice"
+
 repositories {
     mavenCentral()
 }
 
 openApiGenerate {
-    generatorName.set("spring")
-    inputSpec.set("$projectDir/src/main/resources/api-docs.yaml")
-    outputDir.set("$buildDir/generated")
-    apiPackage.set("ua.comparus.userservice.api")
-    modelPackage.set("ua.comparus.userservice.model")
-    configOptions.set([
+    generatorName = "spring"
+    inputSpec = "$projectDir/src/main/resources/api-docs.yaml"
+    outputDir = generatedSourcesDir.get().asFile.path
+    apiPackage = "${basePackage}.api"
+    modelPackage = "${basePackage}.model"
+    configOptions = [
             interfaceOnly       : "true",
             useSpringBoot3      : "true",
             useJakartaEe        : "true",
             openApiNullable     : "false",
             skipDefaultInterface: "true"
-    ])
+    ]
 }
 
 sourceSets {
     main {
         java {
-            srcDirs += "$buildDir/generated/src/main/java"
+            srcDirs += "${generatedSourcesDir.get().asFile.path}/src/main/java"
+        }
+    }
+    test {
+        resources {
+            srcDir 'docker'
         }
     }
 }
 
-tasks.compileJava {
+tasks.named('compileJava') {
     dependsOn(tasks.openApiGenerate)
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    exclude '**/integration/**'
 }
+
+tasks.register('integrationTest', Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform()
+    include '**/integration/**'
+    outputs.upToDateWhen { false }
+}
+
+jacocoTestReport {
+    dependsOn tasks.named('test'), tasks.named('integrationTest')
+    executionData = files(
+            layout.buildDirectory.file("jacoco/test.exec"),
+            layout.buildDirectory.file("jacoco/integrationTest.exec")
+    )
+    reports {
+        xml.required = true
+        html.required = true
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "${basePackage.replace('.', '/')}/model/**",
+                    "${basePackage.replace('.', '/')}/api/**"
+            ])
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    executionData = jacocoTestReport.executionData
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.77
+            }
+        }
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "${basePackage.replace('.', '/')}/model/**",
+                    "${basePackage.replace('.', '/')}/api/**"
+            ])
+        }))
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification

@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SqlQueryBuilderTest {
     // temporary test to make sure the builder works as expected
     @Test
-    void testBuildWithNoConditions() {
+    void testBuildWithConditions() {
         var sqlBuilder = new SqlQueryBuilder()
                 .select()
                 .fieldAs("user_id", "id")
