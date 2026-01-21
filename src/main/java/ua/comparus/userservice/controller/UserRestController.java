@@ -1,5 +1,7 @@
 package ua.comparus.userservice.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +16,7 @@ import java.util.List;
 @RestController
 @Validated
 public class UserRestController implements UsersApi {
+    private static final Logger log = LoggerFactory.getLogger(UserRestController.class);
 
     private final UserService userService;
 
@@ -24,6 +27,8 @@ public class UserRestController implements UsersApi {
     @Override
     public ResponseEntity<List<UserDTO>> getUser(String username, String name, String surname) {
         var params = new UserSearchParams(username, name, surname);
+        log.info("/GET users with params: {}", params);
+
         var users = userService.fetchAllUsers(params);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(users);
     }
