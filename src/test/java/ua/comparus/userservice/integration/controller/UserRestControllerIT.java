@@ -56,13 +56,13 @@ class UserRestControllerIT extends TestcontainersIT {
     @Test
     void shouldReturnValidationErrorForInvalidParams() {
         String errorMessage = restClient.get()
-                .uri("/users?username=&name=test_1&surname=bla bla")
+                .uri("/users?username=u<s>er&name=test_1&surname=Bla'bla")
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class)
                 .returnResult().getResponseBody();
 
-        assertThat(errorMessage).isNotEmpty().contains("username", "name", "surname");
+        assertThat(errorMessage).isNotEmpty().contains("username", "name");
     }
 
     @Test

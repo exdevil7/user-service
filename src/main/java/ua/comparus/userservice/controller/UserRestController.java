@@ -25,7 +25,7 @@ public class UserRestController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<List<UserDTO>> getUser(String username, String name, String surname) {
+    public ResponseEntity<List<UserDTO>> getUsers(String username, String name, String surname) {
         var params = new UserSearchParams(username, name, surname);
         log.info("/GET users with params: {}", params);
 
