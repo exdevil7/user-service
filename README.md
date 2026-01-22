@@ -37,7 +37,7 @@ The easiest way to run the application along with its PostgreSQL and MySQL datab
 
 Start the application:
 ```bash
-docker compose up --build
+docker compose up -d --build
 ```
 
 This will:

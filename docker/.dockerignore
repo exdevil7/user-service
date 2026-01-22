@@ -23,7 +23,16 @@ Thumbs.db
 # Docker files
 Dockerfile
 .dockerignore
+docker-compose.yml
+docker/
 
 # Local environment and logs
 *.log
 .env
+
+# Documentation
+*.md
+LICENSE
+
+# Gradle Windows wrapper
+gradlew.bat
