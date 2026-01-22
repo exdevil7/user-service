@@ -8,6 +8,20 @@
 
 A Spring Boot application providing a unified API to access user data from multiple data sources (PostgreSQL and MySQL).
 
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+    - [1. Configure Environment Variables](#1-configure-environment-variables)
+    - [2. Run with Docker Compose (Recommended)](#2-run-with-docker-compose-recommended)
+    - [3. Run Locally with Gradle](#3-run-locally-with-gradle)
+- [API Documentation and Health](#api-documentation-and-health)
+- [Data Consistency and Availability](#data-consistency-and-availability)
+- [Search and Filtering](#search-and-filtering)
+- [Data Source Configuration](#data-source-configuration)
+    - [Adding a New Data Source](#adding-a-new-data-source)
+- [Conclusion](#conclusion)
+
 ## Prerequisites
 
 - **Java 25** (OpenJDK 25 used for development)
@@ -44,8 +58,8 @@ This will:
 - Build the `user-service` image using the `Dockerfile`.
 - Start a PostgreSQL container (`postgres-db`) on port `5432`.
 - Start a MySQL container (`mysql-db`) on port `3306`.
+- Initialize databases with scripts found in `./docker/sql/postgres/init.sql` and `./docker/sql/mysql/init.sql`.
 - Start the `user-service` container on port `8080`.
-- Initialize databases with scripts found in `./docker/postgres/init.sql` and `./docker/mysql/init.sql`.
 
 Stop the application:
 ```bash
