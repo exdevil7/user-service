@@ -112,6 +112,7 @@ Since filtering requirements were **too vague**, the current implementation supp
 
 - **Exact match** for the `username` field.
 - **Starts-with** (`value%`) search for the `name` and `surname` fields (case-insensitive).
+- **0-indexed pagination** via `page` (default: `0`) and `size` (default: `10`, max: `100`) query parameters.
 
 ## Data Source Configuration
 

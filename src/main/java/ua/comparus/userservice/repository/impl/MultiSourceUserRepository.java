@@ -31,8 +31,22 @@ public class MultiSourceUserRepository implements UserRepository {
         this.virtualThreadExecutor = virtualThreadExecutor;
     }
 
+    /**
+     * Aggregates users from all configured data sources.
+     * <p>
+     * Note: Pagination is performed in-memory after aggregation because the sources
+     * lack a global
+     * sort order or unified index, making database-level pagination inconsistent
+     * across sources.
+     * </p>
+     */
     @Override
     public List<UserDTO> findAll(UserSearchParams params) {
+        List<UserDTO> allUsers = fetchFromAllSources(params);
+        return paginate(allUsers, params.page(), params.size());
+    }
+
+    private List<UserDTO> fetchFromAllSources(UserSearchParams params) {
         var futures = registry.getAllContexts().stream()
                 .map(ctx -> CompletableFuture.supplyAsync(() -> queryDataSource(ctx, params), virtualThreadExecutor))
                 .toList();
@@ -41,6 +55,15 @@ public class MultiSourceUserRepository implements UserRepository {
                 .map(CompletableFuture::join)
                 .flatMap(List::stream)
                 .toList();
+    }
+
+    private List<UserDTO> paginate(List<UserDTO> users, int page, int size) {
+        int fromIndex = page * size;
+        if (fromIndex >= users.size()) {
+            return List.of();
+        }
+        int toIndex = Math.min(fromIndex + size, users.size());
+        return users.subList(fromIndex, toIndex);
     }
 
     private List<UserDTO> queryDataSource(DataSourceRegistry.DataSourceContext ctx, UserSearchParams params) {

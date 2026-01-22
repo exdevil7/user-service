@@ -11,12 +11,15 @@ import org.testcontainers.utility.DockerImageName;
 @Testcontainers()
 public abstract class TestcontainersIT {
 
+    @SuppressWarnings("resource")
     @Container
-    static PostgreSQLContainer postgres = new PostgreSQLContainer(DockerImageName.parse("postgres:17-alpine"))
+    static final PostgreSQLContainer postgres = new PostgreSQLContainer(
+            DockerImageName.parse("postgres:17-alpine"))
             .withInitScript("postgres/init.sql");
 
+    @SuppressWarnings("resource")
     @Container
-    static MySQLContainer mysql = new MySQLContainer(DockerImageName.parse("mysql:8.4"))
+    static final MySQLContainer mysql = new MySQLContainer(DockerImageName.parse("mysql:8.4"))
             .withInitScript("mysql/init.sql");
 
     @DynamicPropertySource

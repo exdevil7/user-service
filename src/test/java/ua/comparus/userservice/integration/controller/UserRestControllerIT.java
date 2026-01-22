@@ -13,7 +13,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @AutoConfigureRestTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserRestControllerIT extends TestcontainersIT {
@@ -54,6 +53,19 @@ class UserRestControllerIT extends TestcontainersIT {
     }
 
     @Test
+    void shouldReturnPagedUsers() {
+        List<UserDTO> usersPage0 = getUsers("/users?page=0&size=2");
+        assertThat(usersPage0).hasSize(2);
+
+        List<UserDTO> usersPage1 = getUsers("/users?page=1&size=2");
+        assertThat(usersPage1).hasSize(2);
+        assertThat(usersPage1).doesNotContainAnyElementsOf(usersPage0);
+
+        List<UserDTO> usersPage3 = getUsers("/users?page=3&size=2");
+        assertThat(usersPage3).isEmpty();
+    }
+
+    @Test
     void shouldReturnValidationErrorForInvalidParams() {
         String errorMessage = restClient.get()
                 .uri("/users?username=u<s>er&name=test_1&surname=Bla'bla")
@@ -63,6 +75,19 @@ class UserRestControllerIT extends TestcontainersIT {
                 .returnResult().getResponseBody();
 
         assertThat(errorMessage).isNotEmpty().contains("username", "name");
+    }
+
+    @Test
+    void shouldReturnValidationErrorForInvalidPagination() {
+        restClient.get()
+                .uri("/users?page=-1")
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        restClient.get()
+                .uri("/users?size=0")
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 
     @Test
