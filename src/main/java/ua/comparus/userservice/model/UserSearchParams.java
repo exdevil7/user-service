@@ -1,6 +1,11 @@
 package ua.comparus.userservice.model;
 
 public record UserSearchParams(String username, String name, String surname) {
+    public UserSearchParams {
+        username = username != null ? username.trim() : null;
+        name = name != null ? name.trim() : null;
+        surname = surname != null ? surname.trim() : null;
+    }
 
     @Override
     public String toString() {

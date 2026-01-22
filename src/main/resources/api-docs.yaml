@@ -2,54 +2,98 @@ openapi: 3.0.3
 info:
   title: User Service API
   version: 1.0.0
+  description: |
+    A service for aggregating user data from multiple database sources.
+    This API provides a unified view of user information across different data providers.
+  contact:
+    name: API Support
+    email: support@example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
 servers:
   - url: http://localhost:8080
     description: Local Development Server
+tags:
+  - name: users
+    description: Operations related to user data aggregation and retrieval
 paths:
   /users:
     get:
-      summary: Get all users
+      summary: Get users
+      description: Returns a list of users aggregated from all configured data sources. Supports optional filtering by username, name, or surname.
       operationId: getUsers
       tags:
         - users
       parameters:
         - name: username
+          description: Filter users by username
           required: false
           in: query
           schema:
             type: string
             pattern: '^[a-zA-Z0-9_.-]+$'
+            maxLength: 50
+            example: "john_doe"
         - name: name
+          description: Filter users by first name
           required: false
           in: query
           schema:
             type: string
-            pattern: "^[\\p{L}\\s-']+$"
+            pattern: "^(?=.*[a-zA-Z\u00C0-\u017F-'])[a-zA-Z\u00C0-\u017F\\s-']+$"
+            maxLength: 50
+            example: "John"
         - name: surname
+          description: Filter users by last name
           required: false
           in: query
           schema:
             type: string
-            pattern: "^[\\p{L}\\s-']+$"
+            pattern: "^(?=.*[a-zA-Z\u00C0-\u017F-'])[a-zA-Z\u00C0-\u017F\\s-']+$"
+            maxLength: 50
+            example: "Doe"
       responses:
         '200':
-          description: OK
+          description: A list of users successfully retrieved from data sources
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: Bad Request - Invalid query parameters or validation failure
+        '500':
+          description: Internal Server Error - An unexpected error occurred while processing the request
 components:
   schemas:
     UserDTO:
       type: object
+      description: Reperesents a unified user profile aggregated from a data source
       properties:
         id:
           type: string
+          description: Unique identifier for the user
+          maxLength: 255
+          example: "550e8400-e29b-41d4-a716-446655440000"
         username:
           type: string
+          description: User's unique login name
+          maxLength: 50
+          example: "jdoe"
         name:
           type: string
+          description: User's first name
+          maxLength: 50
+          example: "John"
         surname:
           type: string
+          description: User's last name
+          maxLength: 50
+          example: "Doe"
+      required:
+        - id
+        - username
+        - name
+        - surname
