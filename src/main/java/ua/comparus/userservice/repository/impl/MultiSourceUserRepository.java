@@ -18,7 +18,6 @@ import java.util.concurrent.ExecutorService;
 public class MultiSourceUserRepository implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(MultiSourceUserRepository.class);
 
-
     private static final String ID = "id";
     private static final String USERNAME = "username";
     private static final String NAME = "name";
